@@ -4,6 +4,8 @@ import { getSiteConfigs } from "@/app/actions/site-config";
 import { PropertyCard } from "@/components/property-card";
 import type { Metadata } from "next";
 
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata(): Promise<Metadata> {
   const configs = await getSiteConfigs();
   return {

@@ -4,6 +4,8 @@ import { getSiteConfigs } from "@/app/actions/site-config";
 import { PropertyCard } from "@/components/property-card";
 import type { Metadata } from "next";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Imóveis",
   description: "Confira nossa lista completa de imóveis disponíveis para venda e locação.",

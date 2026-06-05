@@ -3,6 +3,8 @@ import { getSiteConfigs } from "@/app/actions/site-config";
 import { ContactPageForm } from "./contact-form";
 import type { Metadata } from "next";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Contato",
   description: "Entre em contato com nossa imobiliária. Estamos prontos para atender você.",
