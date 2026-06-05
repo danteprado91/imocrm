@@ -11,6 +11,20 @@ const publicRoutes = ["/login", "/inicio"];
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // Root / redireciona para /inicio se não logado, ou dashboard se logado
+  if (pathname === "/") {
+    const token = request.cookies.get("session")?.value;
+    if (token) {
+      try {
+        await jwtVerify(token, secret);
+        return NextResponse.next();
+      } catch {
+        return NextResponse.redirect(new URL("/inicio", request.url));
+      }
+    }
+    return NextResponse.redirect(new URL("/inicio", request.url));
+  }
+
   if (publicRoutes.some((route) => pathname === route || pathname.startsWith(route + "/"))) {
     return NextResponse.next();
   }
