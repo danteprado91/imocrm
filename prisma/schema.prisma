@@ -1,0 +1,136 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("corretor")
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Property {
+  id            Int      @id @default(autoincrement())
+  title         String
+  type          String
+  area          Int?
+  bedrooms      Int?
+  bathrooms     Int?
+  garageSpots   Int?
+  address       String
+  description   String?
+  salePrice     Float?
+  rentPrice     Float?
+  status        String   @default("Disponível")
+  latitude      Float?
+  longitude     Float?
+  coverImage    String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  contracts     Contract[]
+  visits        Visit[]
+  images        PropertyImage[]
+}
+
+model PropertyImage {
+  id        Int      @id @default(autoincrement())
+  url       String
+  createdAt DateTime @default(now())
+
+  propertyId Int
+  property   Property @relation(fields: [propertyId], references: [id])
+}
+
+model Customer {
+  id            Int      @id @default(autoincrement())
+  name          String
+  email         String?
+  phone         String?
+  document      String?
+  type          String   @default("Comprador")
+  birthDate     String?
+  address       String?
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  contracts     Contract[]
+  visits        Visit[]
+}
+
+model Agent {
+  id            Int      @id @default(autoincrement())
+  name          String
+  email         String?
+  phone         String?
+  document      String?
+  creci         String?
+  commission    Float    @default(5)
+  status        String   @default("Ativo")
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  contracts     Contract[]
+  visits        Visit[]
+}
+
+model Contract {
+  id            Int      @id @default(autoincrement())
+  type          String
+  value         Float
+  date          DateTime @default(now())
+  status        String   @default("Ativo")
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  customerId    Int
+  customer      Customer @relation(fields: [customerId], references: [id])
+  agentId       Int
+  agent         Agent    @relation(fields: [agentId], references: [id])
+  propertyId    Int
+  property      Property @relation(fields: [propertyId], references: [id])
+}
+
+model Visit {
+  id            Int      @id @default(autoincrement())
+  date          DateTime
+  status        String   @default("Pendente")
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  customerId    Int
+  customer      Customer @relation(fields: [customerId], references: [id])
+  propertyId    Int
+  property      Property @relation(fields: [propertyId], references: [id])
+  agentId       Int
+  agent         Agent    @relation(fields: [agentId], references: [id])
+}
+
+model SiteConfig {
+  id    Int    @id @default(autoincrement())
+  key   String @unique
+  value String
+}
+
+model Lead {
+  id         Int      @id @default(autoincrement())
+  name       String
+  email      String
+  phone      String?
+  message    String?
+  propertyId Int?
+  createdAt  DateTime @default(now())
+}
